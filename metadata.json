@@ -1,0 +1,7 @@
+{
+  "name": "SADeaf Strategic Benefit & ROI Model",
+  "description": "Interactive commercial benefit model for OPIM639 strategic business plan evaluating an AI website revamp and operational workflow optimization for the Singapore Association for the Deaf.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

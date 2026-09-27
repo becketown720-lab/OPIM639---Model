@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SADeaf Strategic Benefit & ROI Model | OPIM639 Group 6</title>
+  <meta name="description" content="Interactive commercial benefit model for OPIM639 strategic business plan evaluating an AI website revamp and operational workflow optimization for the Singapore Association for the Deaf (SADeaf).">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            sadeaf: {
+              yellow: '#FFE01B',
+              yellowHover: '#ebd018',
+              slate: '#1E293B',
+              dark: '#0F172A',
+              card: '#182234',
+              border: '#334155'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: #0B1120;
+    }
+    .font-mono, .tabular-nums {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: #334155;
+      border-radius: 9999px;
+      height: 6px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #FFE01B;
+      border: 2px solid #0F172A;
+      box-shadow: 0 0 0 1px rgba(255, 224, 27, 0.4);
+      cursor: grab;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    input[type="range"]:active::-webkit-slider-thumb {
+      cursor: grabbing;
+      transform: scale(1.15);
+      box-shadow: 0 0 0 4px rgba(255, 224, 27, 0.35);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #FFE01B;
+      border: 2px solid #0F172A;
+      box-shadow: 0 0 0 1px rgba(255, 224, 27, 0.4);
+      cursor: grab;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen p-3 sm:p-6 lg:p-8 flex flex-col antialiased selection:bg-[#FFE01B] selection:text-slate-900">
+
+  <!-- Top Navigation & Header Bar -->
+  <header class="border-b border-slate-800 pb-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-[#FFE01B] flex items-center justify-center font-extrabold text-slate-950 text-xl tracking-tighter shadow-md">
+        SD
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white">
+            SADeaf Strategic Benefit & ROI Model
+          </h1>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[#FFE01B] uppercase tracking-wide">
+            OPIM639 Group 6
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">
+          AI Website Revamp & Operational Workflow Optimization Evaluation · Academic Defense Dashboard
+        </p>
+      </div>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <button onclick="toggleDefenseModal()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-900 hover:bg-slate-800 text-[#FFE01B] border border-slate-700 transition-all">
+        <span>Q&A Defense Kit</span>
+      </button>
+
+      <button onclick="copySummary()" id="copyBtn" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition-all">
+        <span id="copyBtnText">Copy Summary</span>
+      </button>
+
+      <button onclick="window.print()" class="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg bg-[#FFE01B] hover:bg-[#ebd018] text-slate-950 shadow-sm transition-all">
+        <span>Print / PDF Presentation</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Audited Baseline Banner: The Operational Paradox -->
+  <div class="mb-6 rounded-xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-850 border border-slate-800 p-4 shadow-lg">
+    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <div class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 shrink-0 mt-0.5 font-bold">
+          ⚠
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold tracking-wider uppercase text-[#FFE01B]">
+              Audited FY25/26 Operational Paradox
+            </span>
+            <span class="text-xs text-slate-500">Official SADeaf Financial Statements</span>
+          </div>
+          <p class="text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
+            Course fee revenue quadrupled (<strong class="text-white">S$ 2,083,000, +285% YoY</strong>) while headcount shrunk by nearly a quarter (<strong class="text-white">61 staff, -23.8% YoY</strong> from 80). Staff are severely overwhelmed handling 18,000+ repetitive enquiries instead of delivering high-touch deaf client services.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 w-full lg:w-auto shrink-0 border-t lg:border-t-0 lg:border-l border-slate-800 pt-3 lg:pt-0 lg:pl-5">
+        <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80">
+          <div class="text-[11px] uppercase font-semibold text-slate-400">Course Revenue</div>
+          <div class="text-base font-bold text-emerald-400 tabular-nums font-mono mt-0.5">S$ 2.083M</div>
+          <div class="text-[10px] text-emerald-500 font-medium">+285% YoY Growth</div>
+        </div>
+        <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80">
+          <div class="text-[11px] uppercase font-semibold text-slate-400">Staff Headcount</div>
+          <div class="text-base font-bold text-amber-400 tabular-nums font-mono mt-0.5">61 Staff</div>
+          <div class="text-[10px] text-rose-400 font-medium">-23.8% YoY (from 80)</div>
+        </div>
+        <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80">
+          <div class="text-[11px] uppercase font-semibold text-slate-400">Cash Donations</div>
+          <div class="text-base font-bold text-sky-400 tabular-nums font-mono mt-0.5">S$ 4.617M</div>
+          <div class="text-[10px] text-slate-400">Tax-Deductible</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 Primary KPI Summary Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <!-- KPI 1: Annual Staff Hours Saved -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          Annual Hours Saved
+        </span>
+        <div class="p-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-mono">
+          HRS
+        </div>
+      </div>
+      <div class="mt-3 flex items-baseline gap-2">
+        <span id="kpiHours" class="text-3xl font-extrabold text-white tabular-nums font-mono">960</span>
+        <span class="text-xs font-semibold text-slate-400">hrs / yr</span>
+      </div>
+      <div class="mt-2 text-xs text-slate-400 flex items-center justify-between border-t border-slate-800/70 pt-2">
+        <span>Staff Capacity:</span>
+        <span id="kpiFte" class="font-semibold text-blue-400 tabular-nums font-mono">~0.5 FTE Equivalent</span>
+      </div>
+    </div>
+
+    <!-- KPI 2: Annual Cost Savings -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          Annual Cost Savings
+        </span>
+        <div class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-mono">
+          SGD
+        </div>
+      </div>
+      <div class="mt-3 flex items-baseline gap-2">
+        <span id="kpiOpEx" class="text-3xl font-extrabold text-emerald-400 tabular-nums font-mono">S$ 28,800</span>
+        <span class="text-xs font-semibold text-slate-400">/ yr</span>
+      </div>
+      <div class="mt-2 text-xs text-slate-400 flex items-center justify-between border-t border-slate-800/70 pt-2">
+        <span>Burdened Rate:</span>
+        <span id="kpiHourlyRate" class="font-semibold text-emerald-400 tabular-nums font-mono">S$ 30/hr</span>
+      </div>
+    </div>
+
+    <!-- KPI 3: Incremental Revenue & Donations -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          Incremental Revenue
+        </span>
+        <div class="p-1.5 rounded-lg bg-sky-500/10 text-sky-400 text-xs font-mono">
+          REV
+        </div>
+      </div>
+      <div class="mt-3 flex items-baseline gap-2">
+        <span id="kpiRevAndDon" class="text-3xl font-extrabold text-sky-400 tabular-nums font-mono">S$ 300,640</span>
+        <span class="text-xs font-semibold text-slate-400">/ yr</span>
+      </div>
+      <div class="mt-2 text-xs text-slate-400 flex items-center justify-between border-t border-slate-800/70 pt-2">
+        <span>Courses: <strong id="kpiSubCourse" class="text-slate-200">S$ 208k</strong></span>
+        <span>Donations: <strong id="kpiSubDon" class="text-slate-200">S$ 92k</strong></span>
+      </div>
+    </div>
+
+    <!-- KPI 4: Total Strategic Annual Value -->
+    <div class="bg-gradient-to-b from-slate-900 to-slate-900 border-2 border-[#FFE01B]/80 rounded-xl p-5 relative overflow-hidden shadow-lg shadow-[#FFE01B]/5">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-[#FFE01B]">
+          Total Strategic Value
+        </span>
+        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#FFE01B] text-slate-950">
+          Net Annual
+        </span>
+      </div>
+      <div class="mt-3 flex items-baseline gap-2">
+        <span id="kpiTotal" class="text-3xl sm:text-4xl font-extrabold text-[#FFE01B] tabular-nums font-mono">S$ 329,440</span>
+        <span class="text-xs font-semibold text-slate-300">/ yr</span>
+      </div>
+      <div class="mt-2 text-xs text-slate-300 flex items-center justify-between border-t border-slate-800 pt-2">
+        <span>Break-Even Period:</span>
+        <span id="kpiPayback" class="font-bold text-[#FFE01B] tabular-nums font-mono">1.6 months</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Grid: Controls & Visualizations -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+    
+    <!-- Left Column: Sensitivity Presets + 5 Input Sliders (5 cols) -->
+    <div class="lg:col-span-5 flex flex-col gap-5">
+      
+      <!-- Sensitivity Preset Buttons -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200">
+            Sensitivity Presets
+          </h2>
+          <button onclick="setPreset('baseline')" class="text-xs text-slate-400 hover:text-[#FFE01B] transition-colors">
+            ↺ Reset Baseline
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="setPreset('conservative')" id="presetBtnConservative" class="p-2.5 rounded-lg border border-slate-800 bg-slate-950/70 hover:bg-slate-800 text-left transition-all">
+            <div class="text-xs font-bold text-slate-300">Conservative</div>
+            <div class="text-[10px] text-slate-400 mt-1">20% defl. · 5% up</div>
+          </button>
+
+          <button onclick="setPreset('baseline')" id="presetBtnBaseline" class="p-2.5 rounded-lg border border-[#FFE01B] bg-slate-800 text-left transition-all">
+            <div class="text-xs font-bold text-[#FFE01B]">Baseline</div>
+            <div class="text-[10px] text-slate-300 mt-1">40% defl. · 10% up</div>
+          </button>
+
+          <button onclick="setPreset('optimistic')" id="presetBtnOptimistic" class="p-2.5 rounded-lg border border-slate-800 bg-slate-950/70 hover:bg-slate-800 text-left transition-all">
+            <div class="text-xs font-bold text-slate-300">Optimistic</div>
+            <div class="text-[10px] text-slate-400 mt-1">60% defl. · 15% up</div>
+          </button>
+        </div>
+        <p id="presetDesc" class="text-[11px] text-slate-400 mt-2.5 italic">
+          Empirically supported 40% AI triage deflection and 10% unified registration uplift.
+        </p>
+      </div>
+
+      <!-- 5 Dynamic Input Sliders -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col gap-5 flex-1 shadow-md">
+        <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+          <div>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-white">
+              Dynamic Parameter Inputs
+            </h2>
+            <p class="text-xs text-slate-400">Two-way synchronized slider & numeric inputs for live defense</p>
+          </div>
+          <span class="text-xs font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+            18k Queries/Yr
+          </span>
+        </div>
+
+        <!-- Slider 1: AI Deflection -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-200">
+              1. AI Triage Deflection Rate
+            </label>
+            <div class="flex items-center gap-1 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+              <input type="number" id="numDeflection" min="10" max="70" step="1" value="40" class="w-10 bg-transparent text-right font-mono font-bold text-xs text-[#FFE01B] outline-none">
+              <span class="text-xs text-slate-400">%</span>
+            </div>
+          </div>
+          <input type="range" id="rangeDeflection" min="10" max="70" step="1" value="40" class="w-full">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>10% (Low)</span>
+            <span class="text-slate-300">Default: 40%</span>
+            <span>70% (High)</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-tight">
+            Percentage of routine enquiries (schedules, VRS usage, campus location) handled automatically by AI.
+          </p>
+        </div>
+
+        <!-- Slider 2: Minutes Saved -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-200">
+              2. Staff Time Saved per Enquiry
+            </label>
+            <div class="flex items-center gap-1 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+              <input type="number" id="numMinutes" min="3" max="15" step="0.5" value="8" class="w-10 bg-transparent text-right font-mono font-bold text-xs text-[#FFE01B] outline-none">
+              <span class="text-xs text-slate-400">mins</span>
+            </div>
+          </div>
+          <input type="range" id="rangeMinutes" min="3" max="15" step="0.5" value="8" class="w-full">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>3 mins</span>
+            <span class="text-slate-300">Default: 8 mins</span>
+            <span>15 mins</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-tight">
+            Average staff time saved per deflected email/WhatsApp enquiry.
+          </p>
+        </div>
+
+        <!-- Slider 3: Hourly Cost -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-200">
+              3. Fully Burdened Staff Hourly Cost
+            </label>
+            <div class="flex items-center gap-1 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+              <span class="text-xs text-slate-400">S$</span>
+              <input type="number" id="numHourly" min="20" max="50" step="1" value="30" class="w-10 bg-transparent text-right font-mono font-bold text-xs text-[#FFE01B] outline-none">
+              <span class="text-xs text-slate-400">/hr</span>
+            </div>
+          </div>
+          <input type="range" id="rangeHourly" min="20" max="50" step="1" value="30" class="w-full">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>S$ 20/hr</span>
+            <span class="text-slate-300">Default: S$ 30/hr</span>
+            <span>S$ 50/hr</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-tight">
+            Comprehensive non-profit salary + CPF (17%) + health & insurance overhead.
+          </p>
+        </div>
+
+        <!-- Slider 4: Course Funnel Uplift -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-200">
+              4. Course Funnel Conversion Uplift
+            </label>
+            <div class="flex items-center gap-1 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+              <input type="number" id="numCourse" min="2" max="20" step="0.5" value="10" class="w-10 bg-transparent text-right font-mono font-bold text-xs text-[#FFE01B] outline-none">
+              <span class="text-xs text-slate-400">%</span>
+            </div>
+          </div>
+          <input type="range" id="rangeCourse" min="2" max="20" step="0.5" value="10" class="w-full">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>2%</span>
+            <span class="text-slate-300">Default: 10%</span>
+            <span>20%</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-tight">
+            Additional enrollment fee revenue retained by unifying the registration funnel and seat status.
+          </p>
+        </div>
+
+        <!-- Slider 5: WCAG Recovery -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-200">
+              5. Conversion Recovery via WCAG Fixes
+            </label>
+            <div class="flex items-center gap-1 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+              <input type="number" id="numWcag" min="0.5" max="5.0" step="0.1" value="2.0" class="w-10 bg-transparent text-right font-mono font-bold text-xs text-[#FFE01B] outline-none">
+              <span class="text-xs text-slate-400">%</span>
+            </div>
+          </div>
+          <input type="range" id="rangeWcag" min="0.5" max="5.0" step="0.1" value="2.0" class="w-full">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>0.5%</span>
+            <span class="text-slate-300">Default: 2.0%</span>
+            <span>5.0%</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-tight">
+            Donation/service conversion recovered by fixing WCAG contrast failures on "Donate" and "Start VRS" buttons.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Charts & Sensitivity Analysis (7 cols) -->
+    <div class="lg:col-span-7 flex flex-col gap-5">
+      
+      <!-- Interactive Chart Section (Chart.js) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-md">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4 mb-4">
+          <div>
+            <h3 class="text-base font-bold text-white">
+              Strategic Value Breakdown & Composition
+            </h3>
+            <p class="text-xs text-slate-400">
+              Real-time proportion of operational savings vs course fees vs donation recovery
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleChartType('doughnut')" id="btnDoughnut" class="px-2.5 py-1 text-xs font-bold rounded bg-[#FFE01B] text-slate-950">
+              Donut View
+            </button>
+            <button onclick="toggleChartType('bar')" id="btnBar" class="px-2.5 py-1 text-xs font-bold rounded bg-slate-800 text-slate-300 hover:text-white">
+              Bar View
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+          <!-- Canvas chart container -->
+          <div class="md:col-span-6 h-56 flex items-center justify-center relative">
+            <canvas id="benefitChart"></canvas>
+          </div>
+
+          <!-- Component Values Table -->
+          <div class="md:col-span-6 space-y-3">
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-semibold text-slate-300">Staff OpEx Savings</span>
+              </div>
+              <span id="chartOpExVal" class="text-xs font-bold font-mono text-emerald-400">S$ 28,800 (8.7%)</span>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-sky-500"></span>
+                <span class="text-xs font-semibold text-slate-300">Course Fee Uplift</span>
+              </div>
+              <span id="chartCourseVal" class="text-xs font-bold font-mono text-sky-400">S$ 208,300 (63.2%)</span>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#FFE01B]"></span>
+                <span class="text-xs font-semibold text-slate-300">Donation Recovery</span>
+              </div>
+              <span id="chartDonVal" class="text-xs font-bold font-mono text-[#FFE01B]">S$ 92,340 (28.0%)</span>
+            </div>
+
+            <div class="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-400 leading-snug">
+              Course fees represent the primary growth engine (+285% YoY), while automated triage liberates 61 overburdened staff.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensitivity Scenario Comparison Table -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-md">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-white mb-1">
+          Sensitivity Scenario Comparison
+        </h3>
+        <p class="text-xs text-slate-400 mb-3">Audited financial comparison against pre-defined sensitivity envelopes</p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400 font-semibold uppercase">
+                <th class="py-2 px-2.5">Scenario</th>
+                <th class="py-2 px-2.5">Deflection</th>
+                <th class="py-2 px-2.5">Hours Saved</th>
+                <th class="py-2 px-2.5">OpEx Savings</th>
+                <th class="py-2 px-2.5">Course Uplift</th>
+                <th class="py-2 px-2.5">Donations</th>
+                <th class="py-2 px-2.5 text-right text-white">Total Value</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/70 font-mono">
+              <tr class="hover:bg-slate-850">
+                <td class="py-2.5 px-2.5 font-bold font-sans text-slate-300">Conservative</td>
+                <td class="py-2.5 px-2.5 text-slate-400">20% / 5m</td>
+                <td class="py-2.5 px-2.5 text-slate-300">300 hrs</td>
+                <td class="py-2.5 px-2.5 text-slate-300">S$ 7,500</td>
+                <td class="py-2.5 px-2.5 text-slate-300">S$ 104,150</td>
+                <td class="py-2.5 px-2.5 text-slate-300">S$ 46,170</td>
+                <td class="py-2.5 px-2.5 font-bold text-right text-emerald-400">S$ 157,820</td>
+              </tr>
+              <tr class="bg-slate-800/40 border-l-2 border-[#FFE01B]">
+                <td class="py-2.5 px-2.5 font-bold font-sans text-[#FFE01B]">Baseline</td>
+                <td class="py-2.5 px-2.5 text-slate-200">40% / 8m</td>
+                <td class="py-2.5 px-2.5 text-slate-200">960 hrs</td>
+                <td class="py-2.5 px-2.5 text-slate-200">S$ 28,800</td>
+                <td class="py-2.5 px-2.5 text-slate-200">S$ 208,300</td>
+                <td class="py-2.5 px-2.5 text-slate-200">S$ 92,340</td>
+                <td class="py-2.5 px-2.5 font-extrabold text-right text-[#FFE01B]">S$ 329,440</td>
+              </tr>
+              <tr class="hover:bg-slate-850">
+                <td class="py-2.5 px-2.5 font-bold font-sans text-sky-400">Optimistic</td>
+                <td class="py-2.5 px-2.5 text-slate-400">60% / 12m</td>
+                <td class="py-2.5 px-2.5 text-slate-300">2,160 hrs</td>
+                <td class="py-2.5 px-2.5 text-slate-300">S$ 75,600</td>
+                <td class="py-2.5 px-2.5 text-slate-300">S$ 312,450</td>
+                <td class="py-2.5 px-2.5 text-slate-300">S$ 161,595</td>
+                <td class="py-2.5 px-2.5 font-bold text-right text-emerald-400">S$ 549,645</td>
+              </tr>
+              <tr class="bg-slate-950 font-bold border-t border-slate-700">
+                <td class="py-2.5 px-2.5 text-white font-sans">Current Live</td>
+                <td id="liveColDefl" class="py-2.5 px-2.5 text-slate-300">40% / 8m</td>
+                <td id="liveColHours" class="py-2.5 px-2.5 text-slate-200">960 hrs</td>
+                <td id="liveColOp" class="py-2.5 px-2.5 text-emerald-400">S$ 28,800</td>
+                <td id="liveColCourse" class="py-2.5 px-2.5 text-sky-400">S$ 208,300</td>
+                <td id="liveColDon" class="py-2.5 px-2.5 text-amber-300">S$ 92,340</td>
+                <td id="liveColTotal" class="py-2.5 px-2.5 text-right text-[#FFE01B] font-extrabold">S$ 329,440</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Real-Time Calculation Logic Audit Box -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs">
+        <div class="text-slate-400 font-semibold mb-1 flex items-center justify-between">
+          <span class="text-slate-200 font-bold uppercase tracking-wider text-[11px]">Deterministic Math Traceability</span>
+          <span class="text-emerald-400 font-mono text-[10px]">18,000 Annual Enquiries</span>
+        </div>
+        <div id="mathAuditBox" class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-slate-300 space-y-1">
+          <div>• Hours Saved = 18,000 × 40% × (8m / 60) = 960 hrs/yr</div>
+          <div>• Operational Savings = 960 hrs × S$ 30/hr = S$ 28,800</div>
+          <div>• Course Fee Uplift = S$ 2,083,000 × 10% = S$ 208,300</div>
+          <div>• Donation Recovery = S$ 4,617,000 × 2% = S$ 92,340</div>
+          <div class="text-[#FFE01B] font-bold border-t border-slate-800 pt-1">
+            • Total Strategic Value = S$ 28,800 + S$ 208,300 + S$ 92,340 = S$ 329,440/yr
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Q&A Defense Kit Modal -->
+  <div id="defenseModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-white">OPIM639 Defense Kit: Anticipated Professor Questions</h3>
+        <button onclick="toggleDefenseModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
+      </div>
+
+      <div class="mt-4 space-y-3 max-h-[65vh] overflow-y-auto pr-1 text-xs">
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+          <div class="font-bold text-slate-200 text-sm mb-1 text-[#FFE01B]">
+            Q1: Is a 40% AI triage deflection realistic for a vulnerable deaf organization?
+          </div>
+          <div class="text-slate-400 leading-relaxed">
+            Yes. The 40% baseline target isolates Tier-1 deterministic enquiries (sign language class schedules, venue accessibility, SingPass login assistance, and Video Relay Service / VRS setup), which constitute 60%+ of routine inbound messages. High-touch deaf social work and case management are strictly routed to human specialists.
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+          <div class="font-bold text-slate-200 text-sm mb-1 text-[#FFE01B]">
+            Q2: Why does WCAG contrast failure equal S$ 92,000 in recovered donations?
+          </div>
+          <div class="text-slate-400 leading-relaxed">
+            SADeaf receives S$ 4.617M in tax-deductible cash donations. The current website features pale white text on bright yellow CTA buttons (&lt; 3:1 contrast ratio, failing WCAG AA 4.5:1), leading to drop-offs among elderly patrons and low-vision donors. A conservative 2.0% conversion recovery unlocks S$ 92,340 in recaptured donations.
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+          <div class="font-bold text-slate-200 text-sm mb-1 text-[#FFE01B]">
+            Q3: How does this solve the 61-staff paradox?
+          </div>
+          <div class="text-slate-400 leading-relaxed">
+            Course revenue surged +285% (S$ 2.083M) while staff plummeted from 80 to 61 (-23.8%). 960 hours of automated triage prevents staff burnout and avoids hiring expensive temporary agency caseworkers, freeing 0.5 FTE equivalent to focus on community advocacy.
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleDefenseModal()" class="px-4 py-2 text-xs font-bold rounded-lg bg-[#FFE01B] text-slate-950 hover:bg-[#ebd018]">
+          Close Defense Kit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Note as explicitly requested -->
+  <footer class="mt-8 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <span>OPIM639 Group 6 Benefit Model | Dynamic Sensitivity Tool for Q&A Session</span>
+    </div>
+    <div class="text-slate-400 text-center sm:text-right">
+      SADeaf Audited Baseline FY25/26: S$ 2.083M Courses · 61 Staff · S$ 4.617M Donations
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    // Financial Baseline Constants
+    const ENQUIRIES = 18000;
+    const COURSE_BASELINE = 2083000;
+    const DONATION_BASELINE = 4617000;
+    const CAPEX_DEFAULT = 45000;
+
+    // Presets definition
+    const PRESETS = {
+      conservative: { defl: 20, min: 5, hr: 25, crs: 5, wcag: 1.0, desc: 'Minimal deflection (20%), low time savings (5m), modest 5% course funnel gain.' },
+      baseline: { defl: 40, min: 8, hr: 30, crs: 10, wcag: 2.0, desc: 'Empirically supported 40% AI triage deflection and 10% unified registration uplift.' },
+      optimistic: { defl: 60, min: 12, hr: 35, crs: 15, wcag: 3.5, desc: 'Aggressive omni-channel automation across WhatsApp & Web with rich VRS handoff.' }
+    };
+
+    // DOM Elements
+    const rangeDefl = document.getElementById('rangeDeflection');
+    const numDefl = document.getElementById('numDeflection');
+    const rangeMin = document.getElementById('rangeMinutes');
+    const numMin = document.getElementById('numMinutes');
+    const rangeHr = document.getElementById('rangeHourly');
+    const numHr = document.getElementById('numHourly');
+    const rangeCrs = document.getElementById('rangeCourse');
+    const numCrs = document.getElementById('numCourse');
+    const rangeWcag = document.getElementById('rangeWcag');
+    const numWcag = document.getElementById('numWcag');
+
+    // Chart Instance
+    let chartInstance = null;
+    let currentChartType = 'doughnut';
+
+    function initChart() {
+      const ctx = document.getElementById('benefitChart').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: currentChartType,
+        data: {
+          labels: ['OpEx Savings', 'Course Uplift', 'Donation Recovery'],
+          datasets: [{
+            data: [28800, 208300, 92340],
+            backgroundColor: ['#10B981', '#0EA5E9', '#FFE01B'],
+            borderColor: '#0F172A',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    function toggleChartType(type) {
+      currentChartType = type;
+      document.getElementById('btnDoughnut').className = type === 'doughnut' ? 'px-2.5 py-1 text-xs font-bold rounded bg-[#FFE01B] text-slate-950' : 'px-2.5 py-1 text-xs font-bold rounded bg-slate-800 text-slate-300 hover:text-white';
+      document.getElementById('btnBar').className = type === 'bar' ? 'px-2.5 py-1 text-xs font-bold rounded bg-[#FFE01B] text-slate-950' : 'px-2.5 py-1 text-xs font-bold rounded bg-slate-800 text-slate-300 hover:text-white';
+      
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+      initChart();
+      calculate();
+    }
+
+    // Calculation & UI Update
+    function calculate() {
+      const defl = parseFloat(rangeDefl.value);
+      const mins = parseFloat(rangeMin.value);
+      const hr = parseFloat(rangeHr.value);
+      const crs = parseFloat(rangeCrs.value);
+      const wcag = parseFloat(rangeWcag.value);
+
+      // Core Formulas
+      const hoursSaved = ENQUIRIES * (defl / 100) * (mins / 60);
+      const opSavings = hoursSaved * hr;
+      const courseRev = COURSE_BASELINE * (crs / 100);
+      const donRec = DONATION_BASELINE * (wcag / 100);
+      const totalStrategicValue = opSavings + courseRev + donRec;
+      const fte = hoursSaved / 2080;
+      const payback = totalStrategicValue > 0 ? (CAPEX_DEFAULT / totalStrategicValue) * 12 : 0;
+
+      // Update KPI Cards
+      document.getElementById('kpiHours').innerText = Math.round(hoursSaved).toLocaleString();
+      document.getElementById('kpiFte').innerText = `~${fte.toFixed(1)} FTE Equivalent`;
+      document.getElementById('kpiOpEx').innerText = `S$ ${Math.round(opSavings).toLocaleString()}`;
+      document.getElementById('kpiHourlyRate').innerText = `S$ ${hr}/hr`;
+      document.getElementById('kpiRevAndDon').innerText = `S$ ${Math.round(courseRev + donRec).toLocaleString()}`;
+      document.getElementById('kpiSubCourse').innerText = `S$ ${Math.round(courseRev / 1000)}k`;
+      document.getElementById('kpiSubDon').innerText = `S$ ${Math.round(donRec / 1000)}k`;
+      document.getElementById('kpiTotal').innerText = `S$ ${Math.round(totalStrategicValue).toLocaleString()}`;
+      document.getElementById('kpiPayback').innerText = payback < 1 ? '< 1 month' : `${payback.toFixed(1)} months`;
+
+      // Update Breakdown Table & Chart
+      const opShare = (opSavings / totalStrategicValue) * 100;
+      const crsShare = (courseRev / totalStrategicValue) * 100;
+      const donShare = (donRec / totalStrategicValue) * 100;
+
+      document.getElementById('chartOpExVal').innerText = `S$ ${Math.round(opSavings).toLocaleString()} (${opShare.toFixed(1)}%)`;
+      document.getElementById('chartCourseVal').innerText = `S$ ${Math.round(courseRev).toLocaleString()} (${crsShare.toFixed(1)}%)`;
+      document.getElementById('chartDonVal').innerText = `S$ ${Math.round(donRec).toLocaleString()} (${donShare.toFixed(1)}%)`;
+
+      // Update Live Comparison Row
+      document.getElementById('liveColDefl').innerText = `${defl}% / ${mins}m`;
+      document.getElementById('liveColHours').innerText = `${Math.round(hoursSaved).toLocaleString()} hrs`;
+      document.getElementById('liveColOp').innerText = `S$ ${Math.round(opSavings).toLocaleString()}`;
+      document.getElementById('liveColCourse').innerText = `S$ ${Math.round(courseRev).toLocaleString()}`;
+      document.getElementById('liveColDon').innerText = `S$ ${Math.round(donRec).toLocaleString()}`;
+      document.getElementById('liveColTotal').innerText = `S$ ${Math.round(totalStrategicValue).toLocaleString()}`;
+
+      // Update Formula Audit Box
+      document.getElementById('mathAuditBox').innerHTML = `
+        <div>• Hours Saved = 18,000 × ${defl}% × (${mins}m / 60) = <strong>${Math.round(hoursSaved).toLocaleString()} hrs/yr</strong></div>
+        <div>• Operational Savings = ${Math.round(hoursSaved).toLocaleString()} hrs × S$ ${hr}/hr = <strong>S$ ${Math.round(opSavings).toLocaleString()}</strong></div>
+        <div>• Course Fee Uplift = S$ 2,083,000 × ${crs}% = <strong>S$ ${Math.round(courseRev).toLocaleString()}</strong></div>
+        <div>• Donation Recovery = S$ 4,617,000 × ${wcag}% = <strong>S$ ${Math.round(donRec).toLocaleString()}</strong></div>
+        <div class="text-[#FFE01B] font-bold border-t border-slate-800 pt-1">
+          • Total Strategic Value = S$ ${Math.round(opSavings).toLocaleString()} + S$ ${Math.round(courseRev).toLocaleString()} + S$ ${Math.round(donRec).toLocaleString()} = <strong>S$ ${Math.round(totalStrategicValue).toLocaleString()}/yr</strong>
+        </div>
+      `;
+
+      // Update Chart Dataset
+      if (chartInstance) {
+        chartInstance.data.datasets[0].data = [Math.round(opSavings), Math.round(courseRev), Math.round(donRec)];
+        chartInstance.update();
+      }
+    }
+
+    // Two-way synchronization helpers
+    function sync(rangeEl, numEl) {
+      rangeEl.addEventListener('input', () => {
+        numEl.value = rangeEl.value;
+        clearPresetHighlights();
+        calculate();
+      });
+      numEl.addEventListener('input', () => {
+        rangeEl.value = numEl.value;
+        clearPresetHighlights();
+        calculate();
+      });
+    }
+
+    sync(rangeDefl, numDefl);
+    sync(rangeMin, numMin);
+    sync(rangeHr, numHr);
+    sync(rangeCrs, numCrs);
+    sync(rangeWcag, numWcag);
+
+    function clearPresetHighlights() {
+      ['conservative', 'baseline', 'optimistic'].forEach(p => {
+        const id = 'presetBtn' + p.charAt(0).toUpperCase() + p.slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          el.className = 'p-2.5 rounded-lg border border-slate-800 bg-slate-950/70 hover:bg-slate-800 text-left transition-all';
+          el.children[0].className = 'text-xs font-bold text-slate-300';
+        }
+      });
+      document.getElementById('presetDesc').innerText = 'Custom interactive scenario configuration';
+    }
+
+    function setPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+
+      rangeDefl.value = numDefl.value = p.defl;
+      rangeMin.value = numMin.value = p.min;
+      rangeHr.value = numHr.value = p.hr;
+      rangeCrs.value = numCrs.value = p.crs;
+      rangeWcag.value = numWcag.value = p.wcag;
+
+      clearPresetHighlights();
+      const activeId = 'presetBtn' + key.charAt(0).toUpperCase() + key.slice(1);
+      const activeEl = document.getElementById(activeId);
+      if (activeEl) {
+        activeEl.className = 'p-2.5 rounded-lg border border-[#FFE01B] bg-slate-800 text-left transition-all';
+        activeEl.children[0].className = 'text-xs font-bold text-[#FFE01B]';
+      }
+      document.getElementById('presetDesc').innerText = p.desc;
+      calculate();
+    }
+
+    function toggleDefenseModal() {
+      const modal = document.getElementById('defenseModal');
+      modal.classList.toggle('hidden');
+    }
+
+    function copySummary() {
+      const total = document.getElementById('kpiTotal').innerText;
+      const hours = document.getElementById('kpiHours').innerText;
+      const op = document.getElementById('kpiOpEx').innerText;
+      const rev = document.getElementById('kpiRevAndDon').innerText;
+      
+      const text = `SADeaf Strategic Benefit Model (OPIM639 Group 6)
+--------------------------------------------------
+Total Annual Strategic Value: ${total}
+• Operational Savings: ${op} (${hours} hrs saved)
+• Incremental Commercial & Public Revenue: ${rev}
+Audited FY25/26 Context: 61 staff supporting quadrupled (+285%) S$ 2.083M course revenue.`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const btnText = document.getElementById('copyBtnText');
+        btnText.innerText = 'Copied!';
+        setTimeout(() => { btnText.innerText = 'Copy Summary'; }, 2000);
+      });
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initChart();
+      calculate();
+    });
+  </script>
+</body>
+</html>
